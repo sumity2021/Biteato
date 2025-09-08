@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink, useParams } from "react-router-dom";
-import "../styles/bottom-nav.css";
 const BottomNavFoodPartner = () => {
   const { id } = useParams();
   return (
