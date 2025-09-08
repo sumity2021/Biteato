@@ -1,0 +1,204 @@
+/* Page */
+.create-food-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding: var(--space-6) var(--space-4);
+}
+
+/* Card */
+.create-food-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  max-width: 550px;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+}
+
+/* Header */
+.create-food-header {
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+.create-food-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.create-food-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* Form */
+.create-food-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Field groups */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.field-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* File Upload */
+.file-input-hidden {
+  display: none;
+}
+.file-dropzone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  cursor: pointer;
+  text-align: center;
+  background: var(--color-surface-alt);
+  transition: border-color var(--transition-base),
+    background var(--transition-base);
+}
+.file-dropzone:hover {
+  border-color: var(--color-accent);
+  background: rgba(0, 255, 127, 0.05);
+}
+.file-dropzone-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+.file-icon {
+  color: var(--color-accent);
+}
+.file-dropzone-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.file-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+/* File chip */
+.file-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.file-chip-name {
+  font-weight: 500;
+  margin-left: var(--space-2);
+  color: var(--color-text);
+}
+.file-chip-size {
+  color: var(--color-text-secondary);
+  margin-left: var(--space-2);
+  font-size: 0.8rem;
+}
+.file-chip-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+.btn-ghost {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #0c39c0;
+  transition: color var(--transition-base);
+}
+.btn-ghost:hover {
+  color: #2b5be9;
+}
+.btn-ghost.danger {
+  color: var(--color-danger);
+}
+.btn-ghost.danger:hover {
+  color: #ff3333;
+}
+
+/* Video Preview */
+.video-preview {
+  margin-top: var(--space-3);
+}
+.video-preview-el {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  max-height: 320px;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  background: #000;
+}
+
+/* Inputs */
+input[type="text"],
+textarea {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  transition: border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+input[type="text"]:focus,
+textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(0, 255, 127, 0.3);
+  outline: none;
+}
+
+/* Error text */
+.error-text {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: var(--space-1);
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-primary {
+  background: var(--color-accent);
+  color: #000;
+  border: none;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-base),
+    transform var(--transition-base);
+}
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
