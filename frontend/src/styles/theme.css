@@ -51,7 +51,7 @@
 
 body {
   font-family: var(--font-stack);
-  background: var(--color-bg);
+  background: url("../assets/front.gif");
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   line-height: 1.4;
