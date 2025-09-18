@@ -31,7 +31,7 @@ const PrivateRoute = ({ children, role }) => {
           setAuthorized(false);
         }
       } catch (err) {
-        console.error(err);
+        console.log(err);
         setAuthorized(false);
       } finally {
         setLoading(false);
