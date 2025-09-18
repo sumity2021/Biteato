@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../styles/comment-box.css";
 import axios from "axios";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const CommentBox = ({
   visible = false,
   item = null,
@@ -17,7 +19,7 @@ const CommentBox = ({
     const fetchComments = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/food/comment/${item._id}`,
+          `${BACKEND_URL}/api/food/comment/${item._id}`,
           { withCredentials: true }
         );
         setComments(res.data.comments);
@@ -46,7 +48,7 @@ const CommentBox = ({
 
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/food/comment/${item._id}`,
+        `${BACKEND_URL}/api/food/comment/${item._id}`,
         { text },
         { withCredentials: true }
       );

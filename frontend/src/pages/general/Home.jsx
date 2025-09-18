@@ -3,12 +3,14 @@ import axios from "axios";
 import "../../styles/reels.css";
 import ReelFeed from "../../components/ReelFeed";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const Home = () => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/food", { withCredentials: true })
+      .get(`${BACKEND_URL}/api/food`, { withCredentials: true })
       .then((response) => {
         console.log(response.data);
 
@@ -21,7 +23,7 @@ const Home = () => {
 
   async function likeVideo(item) {
     const response = await axios.post(
-      "http://localhost:3000/api/food/like",
+      `${BACKEND_URL}/api/food/like`,
       { foodId: item._id },
       { withCredentials: true }
     );
@@ -43,7 +45,7 @@ const Home = () => {
 
   async function saveVideo(item) {
     const response = await axios.post(
-      "http://localhost:3000/api/food/save",
+      `${BACKEND_URL}/api/food/save`,
       { foodId: item._id },
       { withCredentials: true }
     );

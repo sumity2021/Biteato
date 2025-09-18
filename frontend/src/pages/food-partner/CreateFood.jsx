@@ -3,6 +3,8 @@ import axios from "axios";
 import "../../styles/create-food.css";
 import { toast } from "react-toastify";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const CreateFood = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -69,13 +71,9 @@ const CreateFood = () => {
 
     setIsSaving(true);
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/food",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${BACKEND_URL}/api/food`, formData, {
+        withCredentials: true,
+      });
       toast.success("Food created");
     } catch (err) {
       console.error(err);

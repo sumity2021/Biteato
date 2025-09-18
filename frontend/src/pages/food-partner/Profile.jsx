@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import EditFoodPartnerProfileModal from "../../components/EditFoodPartnerProfileModal";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const Profile = ({ role }) => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
@@ -16,7 +18,7 @@ const Profile = ({ role }) => {
     (async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/api/food-partner/${id}`,
+          `${BACKEND_URL}/api/food-partner/${id}`,
           { withCredentials: true }
         );
         if (cancelled) return;

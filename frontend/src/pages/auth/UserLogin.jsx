@@ -4,6 +4,8 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const UserLogin = () => {
   const navigate = useNavigate();
 
@@ -15,7 +17,7 @@ const UserLogin = () => {
       const password = e.target.password.value;
 
       const response = await axios.post(
-        "http://localhost:3000/api/auth/user/login",
+        `${BACKEND_URL}/api/auth/user/login`,
         { email, password },
         { withCredentials: true }
       );

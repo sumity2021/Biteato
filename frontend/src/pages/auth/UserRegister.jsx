@@ -4,6 +4,9 @@ import "../../styles/auth-shared.css";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const UserRegister = () => {
   const navigate = useNavigate();
 
@@ -17,7 +20,7 @@ const UserRegister = () => {
       const password = e.target.password.value;
 
       const response = await axios.post(
-        "http://localhost:3000/api/auth/user/register",
+        `${BACKEND_URL}/api/auth/user/register`,
         {
           fullName: firstName + " " + lastName,
           email,

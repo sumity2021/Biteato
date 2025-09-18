@@ -3,12 +3,14 @@ import "../../styles/reels.css";
 import axios from "axios";
 import ReelFeed from "../../components/ReelFeed";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const Saved = () => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/food/save", {
+      .get(`${BACKEND_URL}/api/food/save`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -29,7 +31,7 @@ const Saved = () => {
   const removeSaved = async (item) => {
     try {
       await axios.post(
-        "http://localhost:3000/api/food/save",
+        `${BACKEND_URL}/api/food/save`,
         { foodId: item._id },
         { withCredentials: true }
       );

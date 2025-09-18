@@ -4,6 +4,8 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const FoodPartnerLogin = () => {
   const navigate = useNavigate();
 
@@ -14,7 +16,7 @@ const FoodPartnerLogin = () => {
     const password = e.target.password.value;
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/food-partner/login",
+        `${BACKEND_URL}/api/auth/food-partner/login`,
         {
           email,
           password,

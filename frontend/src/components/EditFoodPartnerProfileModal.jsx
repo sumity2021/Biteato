@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const EditFoodPartnerProfileModal = ({ id, profile, onClose, onSaved }) => {
   const [form, setForm] = useState({
     name: profile.name || "",
@@ -44,9 +46,9 @@ const EditFoodPartnerProfileModal = ({ id, profile, onClose, onSaved }) => {
         headers["Content-Type"] = "application/json";
       }
       const { data } = await axios.put(
-        `http://localhost:3000/api/food-partner/update`,
+        `${BACKEND_URL}/api/food-partner/update`,
         payload,
-        { withCredentials: true }
+        { withCredentials: true, headers }
       );
       const updated = data.foodPartner || data.updated || form;
       console.log(data);

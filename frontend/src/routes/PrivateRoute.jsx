@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const PrivateRoute = ({ children, role }) => {
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -11,22 +13,19 @@ const PrivateRoute = ({ children, role }) => {
       try {
         let res;
         if (role === "user") {
-          res = await axios.get(
-            "http://localhost:3000/api/auth/user/validate",
-            {
-              withCredentials: true,
-            }
-          );
+          res = await axios.get(`${BACKEND_URL}/api/auth/user/validate`, {
+            withCredentials: true,
+          });
         } else if (role === "partner") {
           res = await axios.get(
-            "http://localhost:3000/api/auth/food-partner/validate",
+            `${BACKEND_URL}/api/auth/food-partner/validate`,
             {
               withCredentials: true,
             }
           );
         }
 
-        if (res.data.valid) {
+        if (res?.data?.valid) {
           setAuthorized(true); // user is authorized
         } else {
           setAuthorized(false);

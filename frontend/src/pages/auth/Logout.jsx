@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const Logout = () => {
   const navigate = useNavigate();
   const hasRun = useRef(false);
@@ -12,7 +14,7 @@ const Logout = () => {
 
     const doLogout = async () => {
       try {
-        await axios.delete("http://localhost:3000/api/auth/logout", {
+        await axios.delete(`${BACKEND_URL}/api/auth/logout`, {
           withCredentials: true,
         });
         toast.success("Logged out successfully");
