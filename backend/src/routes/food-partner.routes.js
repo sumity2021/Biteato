@@ -8,11 +8,7 @@ const uploadFile = multer({
   storage: multer.memoryStorage(),
 });
 /* /api/food-partner/:id */
-router.get(
-  "/:id",
-  authMiddleware.authUserMiddleware,
-  foodPartnerController.getFoodPartnerById
-);
+router.get("/:id", foodPartnerController.getFoodPartnerById);
 
 router.put(
   "/update",

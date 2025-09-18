@@ -48,7 +48,7 @@ const EditFoodPartnerProfileModal = ({ id, profile, onClose, onSaved }) => {
       const { data } = await axios.put(
         `${BACKEND_URL}/api/food-partner/update`,
         payload,
-        { withCredentials: true, headers }
+        { headers, withCredentials: true }
       );
       const updated = data.foodPartner || data.updated || form;
       console.log(data);
