@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const Logout = () => {
   const navigate = useNavigate();
+  const hasRun = useRef(false); // flag
 
   useEffect(() => {
+    if (hasRun.current) return; // prevent double run
+    hasRun.current = true;
+
     const doLogout = async () => {
       try {
         await axios.delete("http://localhost:3000/api/auth/logout", {
