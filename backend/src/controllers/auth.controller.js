@@ -31,11 +31,7 @@ async function registerUser(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-  });
+  res.cookie("token", token);
 
   res.status(201).json({
     message: "User registered successfully",
@@ -75,11 +71,7 @@ async function loginUser(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-  });
+  res.cookie("token", token);
 
   res.status(200).json({
     message: "User logged in successfully",
@@ -122,11 +114,7 @@ async function registerFoodPartner(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-  });
+  res.cookie("token", token);
 
   res.status(201).json({
     message: "Food partner registered successfully",
@@ -169,11 +157,7 @@ async function loginFoodPartner(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-  });
+  res.cookie("token", token);
 
   res.status(200).json({
     message: "Food partner logged in successfully",
@@ -182,6 +166,12 @@ async function loginFoodPartner(req, res) {
       email: foodPartner.email,
       name: foodPartner.name,
     },
+  });
+}
+
+function validateUser(req, res) {
+  res.status(200).json({
+    valid: true,
   });
 }
 
@@ -198,4 +188,5 @@ module.exports = {
   logout,
   registerFoodPartner,
   loginFoodPartner,
+  validateUser,
 };

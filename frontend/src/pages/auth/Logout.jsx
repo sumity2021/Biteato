@@ -5,10 +5,9 @@ import { toast } from "react-toastify";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const hasRun = useRef(false); // flag
-
+  const hasRun = useRef(false);
   useEffect(() => {
-    if (hasRun.current) return; // prevent double run
+    if (hasRun.current) return;
     hasRun.current = true;
 
     const doLogout = async () => {

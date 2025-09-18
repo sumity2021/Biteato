@@ -10,22 +10,22 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // try {
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    try {
+      const email = e.target.email.value;
+      const password = e.target.password.value;
 
-    const response = await axios.post(
-      "https://biteato-tdre0.sevalla.app/api/auth/user/login",
-      { email, password },
-      { withCredentials: true }
-    );
-    console.log(response);
-    toast.success("Signed in");
-    navigate("/home");
-    // } catch (err) {
-    //   console.error(err.message);
-    //   toast.error("check your credentials");
-    // }
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/user/login",
+        { email, password },
+        { withCredentials: true }
+      );
+      console.log(response);
+      toast.success("Signed in");
+      navigate("/home");
+    } catch (err) {
+      console.error(err.message);
+      toast.error("check your credentials");
+    }
   };
 
   return (

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
-import Cookies from "js-cookie";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import UserRegister from "../pages/auth/UserRegister";
 import ChooseRegister from "../pages/auth/ChooseRegister";
@@ -19,11 +13,7 @@ import BottomNavFoodPartner from "../components/BottomNavFoodPartner";
 import CreateFood from "../pages/food-partner/CreateFood";
 import Profile from "../pages/food-partner/Profile";
 import Logout from "../pages/auth/Logout";
-
-const PrivateRoute = ({ children }) => {
-  const authed = !!Cookies.get("token");
-  return authed ? children : <Navigate to="/" replace />;
-};
+import PrivateRoute from "./PrivateRoute";
 
 export function AppRoutes() {
   return (
@@ -39,65 +29,56 @@ export function AppRoutes() {
         />
         <Route path="/food-partner/login" element={<FoodPartnerLogin />} />
 
-        {/* Protected routes */}
+        {/* Protected routes for users */}
         <Route
           path="/home"
           element={
-            <PrivateRoute>
-              <>
-                <Home />
-                <BottomNavUser />
-              </>
+            <PrivateRoute role="user">
+              <Home />
+              <BottomNavUser />
             </PrivateRoute>
           }
         />
         <Route
           path="/saved"
           element={
-            <PrivateRoute>
-              <>
-                <Saved />
-                <BottomNavUser />
-              </>
+            <PrivateRoute role="user">
+              <Saved />
+              <BottomNavUser />
             </PrivateRoute>
           }
         />
         <Route
           path="/food-partner/:id"
           element={
-            <PrivateRoute>
-              <>
-                <Profile />
-                <BottomNavUser />
-              </>
+            <PrivateRoute role="user">
+              <Profile />
+              <BottomNavUser />
             </PrivateRoute>
           }
         />
 
+        {/* Protected routes for food partners */}
         <Route
           path="/:id/create-food"
           element={
-            <PrivateRoute>
-              <>
-                <CreateFood />
-                <BottomNavFoodPartner />
-              </>
+            <PrivateRoute role="partner">
+              <CreateFood />
+              <BottomNavFoodPartner />
             </PrivateRoute>
           }
         />
-
         <Route
           path="/me/:id"
           element={
-            <PrivateRoute>
-              <>
-                <Profile role="partner" />
-                <BottomNavFoodPartner />
-              </>
+            <PrivateRoute role="partner">
+              <Profile role="partner" />
+              <BottomNavFoodPartner />
             </PrivateRoute>
           }
         />
 
+        {/* Logout */}
         <Route path="/logout" element={<Logout />} />
       </Routes>
     </Router>

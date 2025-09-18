@@ -4,7 +4,6 @@ import "../../styles/auth-shared.css";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
 const UserRegister = () => {
   const navigate = useNavigate();
 
