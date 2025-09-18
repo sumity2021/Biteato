@@ -1,8 +1,8 @@
 import React from "react";
 import "../../styles/auth-shared.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 const FoodPartnerLogin = () => {
   const navigate = useNavigate();
 
@@ -11,19 +11,22 @@ const FoodPartnerLogin = () => {
 
     const email = e.target.email.value;
     const password = e.target.password.value;
-
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/food-partner/login",
-      {
-        email,
-        password,
-      },
-      { withCredentials: true }
-    );
-
-    const responseData = response.data;
-    console.log(responseData);
-    navigate(`/${responseData.foodPartner._id}/create-food`);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/food-partner/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+      console.log(response);
+      toast.success("Signed in");
+      navigate(`/${response.data.foodPartner._id}/create-food`);
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Check your credentials");
+    }
   };
 
   return (
@@ -34,7 +37,7 @@ const FoodPartnerLogin = () => {
         aria-labelledby="partner-login-title"
       >
         <header>
-          <h1 id="partner-login-title" className="auth-title">
+          <h1 id="partner-login-title" className="auth-title ">
             Partner login
           </h1>
           <p className="auth-subtitle">
@@ -67,7 +70,10 @@ const FoodPartnerLogin = () => {
           </button>
         </form>
         <div className="auth-alt-action">
-          New partner? <a href="/food-partner/register">Create an account</a>
+          New partner?{" "}
+          <Link to="/food-partner/register">
+            <span>Create an account</span>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 import "../../styles/auth-shared.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UserRegister = () => {
   const navigate = useNavigate();
@@ -10,26 +11,30 @@ const UserRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const firstName = e.target.firstName.value;
-    const lastName = e.target.lastName.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    try {
+      const firstName = e.target.firstName.value;
+      const lastName = e.target.lastName.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
 
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/user/register",
-      {
-        fullName: firstName + " " + lastName,
-        email,
-        password,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-
-    console.log(response.data);
-
-    navigate("/home");
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/user/register",
+        {
+          fullName: firstName + " " + lastName,
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      toast.success("Account created");
+      navigate("/home");
+    } catch (err) {
+      console.error(err);
+      toast.error("Registration failed");
+    }
   };
 
   return (
@@ -47,11 +52,6 @@ const UserRegister = () => {
             Join to explore and enjoy delicious meals.
           </p>
         </header>
-        <nav className="auth-alt-action" style={{ marginTop: "-4px" }}>
-          <Link to="/food-partner/register">
-            <h2>Food partner?</h2>
-          </Link>
-        </nav>
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="two-col">
             <div className="field-group">
@@ -98,7 +98,10 @@ const UserRegister = () => {
           </button>
         </form>
         <div className="auth-alt-action">
-          Already have an account? <Link to="/user/login">Sign in</Link>
+          Already have an account?{" "}
+          <Link to="/user/login">
+            <span>Sign in</span>
+          </Link>
         </div>
       </div>
     </div>

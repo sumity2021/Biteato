@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../styles/auth-shared.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const FoodPartnerRegister = () => {
   const navigate = useNavigate();
@@ -31,9 +32,14 @@ const FoodPartnerRegister = () => {
         { withCredentials: true }
       )
       .then((response) => {
+        console.log(response);
         const responseData = response.data;
-        console.log(responseData);
+        toast.success("Registration successful");
         navigate(`/${responseData.foodPartner._id}/create-food`);
+      })
+      .catch((error) => {
+        console.error("Registration error:", error);
+        toast.error("Registration failed");
       });
   };
 
@@ -50,11 +56,7 @@ const FoodPartnerRegister = () => {
           </h1>
           <p className="auth-subtitle">Grow your business with our platform.</p>
         </header>
-        <nav className="auth-alt-action" style={{ margin: "-10px" }}>
-          <Link to="/user/register">
-            <h2>User?</h2>
-          </Link>
-        </nav>
+
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="field-group">
             <label htmlFor="businessName">Business Name</label>

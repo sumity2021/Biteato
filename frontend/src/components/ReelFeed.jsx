@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import CommentBox from "../components/CommentBox";
+import "../styles/comment-box.css";
 
 const ReelFeed = ({
   items = [],
@@ -8,6 +10,25 @@ const ReelFeed = ({
   emptyMessage = "No videos yet.",
 }) => {
   const videoRefs = useRef(new Map());
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
+  const [commentCounts, setCommentCounts] = useState({});
+
+  useEffect(() => {
+    const map = {};
+    items.forEach((it) => {
+      if (it && it._id) map[it._id] = it.commentsCount ?? 0;
+    });
+    setCommentCounts(map);
+  }, [items]);
+
+  const handleAddComment = (itemId) => {
+    setCommentCounts((prev) => {
+      const current =
+        prev[itemId] ?? items.find((i) => i._id === itemId)?.commentsCount ?? 0;
+      return { ...prev, [itemId]: current + 1 };
+    });
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -16,9 +37,7 @@ const ReelFeed = ({
           const video = entry.target;
           if (!(video instanceof HTMLVideoElement)) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-            video.play().catch(() => {
-              /* ignore autoplay errors */
-            });
+            video.play().catch(() => {});
           } else {
             video.pause();
           }
@@ -62,12 +81,15 @@ const ReelFeed = ({
 
             <div className="reel-overlay">
               <div className="reel-overlay-gradient" aria-hidden="true" />
+
+              {/* actions remain grouped together and sit above content */}
               <div className="reel-actions">
                 <div className="reel-action-group">
                   <button
                     onClick={onLike ? () => onLike(item) : undefined}
                     className="reel-action"
                     aria-label="Like"
+                    type="button"
                   >
                     <svg
                       width="22"
@@ -92,6 +114,7 @@ const ReelFeed = ({
                     className="reel-action"
                     onClick={onSave ? () => onSave(item) : undefined}
                     aria-label="Bookmark"
+                    type="button"
                   >
                     <svg
                       width="22"
@@ -107,12 +130,20 @@ const ReelFeed = ({
                     </svg>
                   </button>
                   <div className="reel-action__count">
-                    {item.savesCount ?? item.bookmarks ?? item.saves ?? 0}
+                    {item.savesCount ?? 0}
                   </div>
                 </div>
 
                 <div className="reel-action-group">
-                  <button className="reel-action" aria-label="Comments">
+                  <button
+                    className="reel-action"
+                    onClick={() => {
+                      setActiveItem(item);
+                      setCommentOpen(true);
+                    }}
+                    aria-label="Comments"
+                    type="button"
+                  >
                     <svg
                       width="22"
                       height="22"
@@ -127,8 +158,7 @@ const ReelFeed = ({
                     </svg>
                   </button>
                   <div className="reel-action__count">
-                    {item.commentsCount ??
-                      (Array.isArray(item.comments) ? item.comments.length : 0)}
+                    {commentCounts[item._id] ?? item.commentsCount ?? 0}
                   </div>
                 </div>
               </div>
@@ -151,6 +181,16 @@ const ReelFeed = ({
           </section>
         ))}
       </div>
+
+      <CommentBox
+        visible={commentOpen}
+        item={activeItem}
+        onClose={() => {
+          setCommentOpen(false);
+          setActiveItem(null);
+        }}
+        onAddComment={(itemId) => handleAddComment(itemId)}
+      />
     </div>
   );
 };

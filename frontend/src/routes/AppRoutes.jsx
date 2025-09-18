@@ -20,15 +20,12 @@ import CreateFood from "../pages/food-partner/CreateFood";
 import Profile from "../pages/food-partner/Profile";
 import Logout from "../pages/auth/Logout";
 
-const isAuthenticated = () => {
-  return !!Cookies.get("token");
-};
-
 const PrivateRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/" replace />;
+  const authed = !!Cookies.get("token");
+  return authed ? children : <Navigate to="/" replace />;
 };
 
-const AppRoutes = () => {
+export function AppRoutes() {
   return (
     <Router>
       <Routes>
@@ -94,7 +91,7 @@ const AppRoutes = () => {
           element={
             <PrivateRoute>
               <>
-                <Profile />
+                <Profile role="partner" />
                 <BottomNavFoodPartner />
               </>
             </PrivateRoute>
@@ -105,6 +102,6 @@ const AppRoutes = () => {
       </Routes>
     </Router>
   );
-};
+}
 
 export default AppRoutes;

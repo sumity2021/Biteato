@@ -8,7 +8,9 @@ const Saved = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/food/save", { withCredentials: true })
+      .get("http://localhost:3000/api/food/save", {
+        withCredentials: true,
+      })
       .then((response) => {
         console.log(response.data);
         const savedFoods = response.data.savedFoods.map((item) => ({

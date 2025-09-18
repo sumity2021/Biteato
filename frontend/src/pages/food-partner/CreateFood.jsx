@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import "../../styles/create-food.css";
+import { toast } from "react-toastify";
 
 const CreateFood = () => {
   const [name, setName] = useState("");
@@ -9,6 +10,7 @@ const CreateFood = () => {
   const [videoURL, setVideoURL] = useState("");
   const [fileError, setFileError] = useState("");
   const fileInputRef = useRef(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (!videoFile) {
@@ -65,14 +67,27 @@ const CreateFood = () => {
     formData.append("description", description);
     formData.append("mama", videoFile);
 
-    const response = await axios.post(
-      "http://localhost:3000/api/food",
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
-    console.log(response.data);
+    setIsSaving(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/food",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      toast.success("Food created");
+    } catch (err) {
+      console.error(err);
+      toast.error("Food creation failed");
+      return;
+    } finally {
+      setIsSaving(false);
+    }
+    setFileError("");
+    setName("");
+    setDescription("");
+    setVideoFile(null);
   };
 
   const isDisabled = useMemo(
@@ -222,8 +237,12 @@ const CreateFood = () => {
           </div>
 
           <div className="form-actions">
-            <button className="btn-primary" type="submit" disabled={isDisabled}>
-              Save Food
+            <button
+              className="btn-primary"
+              type="submit"
+              disabled={isDisabled || isSaving}
+            >
+              {isSaving ? "Saving..." : "Save Food"}
             </button>
           </div>
         </form>

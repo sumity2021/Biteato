@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -8,14 +9,14 @@ const Logout = () => {
   useEffect(() => {
     const doLogout = async () => {
       try {
-        await axios.post(
-          "http://localhost:3000/api/auth/logout",
-          {},
-          { withCredentials: true }
-        );
-        navigate("/"); // redirect to home after logout
+        await axios.delete("http://localhost:3000/api/auth/logout", {
+          withCredentials: true,
+        });
+        toast.success("Logged out successfully");
+        navigate("/");
       } catch (error) {
         console.error("Error logging out:", error);
+        toast.error("Logout failed");
       }
     };
 
