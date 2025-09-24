@@ -14,15 +14,14 @@ const Saved = () => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response.data);
         const savedFoods = response.data.savedFoods.map((item) => ({
-          _id: item.food._id,
-          video: item.food.video,
-          description: item.food.description,
-          likeCount: item.food.likeCount,
-          savesCount: item.food.savesCount,
-          commentsCount: item.food.commentsCount,
-          foodPartner: item.food.foodPartner,
+          _id: item._id,
+          video: item.video,
+          description: item.description,
+          likeCount: item.likeCount,
+          saveCount: item.saveCount,
+          commentCount: item.commentCount,
+          foodPartner: item.foodPartner,
         }));
         setVideos(savedFoods);
       });
@@ -35,13 +34,7 @@ const Saved = () => {
         { foodId: item._id },
         { withCredentials: true }
       );
-      setVideos((prev) =>
-        prev.map((v) =>
-          v._id === item._id
-            ? { ...v, savesCount: Math.max(0, (v.savesCount ?? 1) - 1) }
-            : v
-        )
-      );
+      setVideos((prev) => prev.filter((v) => v._id !== item._id));
     } catch {
       console.error("Error removing saved video");
     }

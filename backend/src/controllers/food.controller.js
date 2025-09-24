@@ -25,11 +25,33 @@ async function createFood(req, res) {
 }
 
 async function getFoodItems(req, res) {
-  const foodItems = await foodModel.find({});
-  res.status(200).json({
-    message: "Food items fetched successfully",
-    foodItems,
-  });
+  try {
+    const foodItems = await foodModel.find({});
+    const result = await Promise.all(
+      foodItems.map(async (food) => {
+        const [likeCount, saveCount, commentCount] = await Promise.all([
+          likeModel.countDocuments({ food: food._id }),
+          saveModel.countDocuments({ food: food._id }),
+          commentModel.countDocuments({ food: food._id }),
+        ]);
+
+        return {
+          ...food.toObject(),
+          likeCount,
+          saveCount,
+          commentCount,
+        };
+      })
+    );
+
+    res.status(200).json({
+      message: "Food items fetched successfully",
+      foodItems: result,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 }
 
 async function likeFood(req, res) {
@@ -46,28 +68,17 @@ async function likeFood(req, res) {
       user: user._id,
       food: foodId,
     });
-
-    await foodModel.findByIdAndUpdate(foodId, {
-      $inc: { likeCount: -1 },
-    });
-
-    return res.status(200).json({
-      message: "Food unliked successfully",
+  } else {
+    await likeModel.create({
+      user: user._id,
+      food: foodId,
     });
   }
-
-  const like = await likeModel.create({
-    user: user._id,
-    food: foodId,
-  });
-
-  await foodModel.findByIdAndUpdate(foodId, {
-    $inc: { likeCount: 1 },
-  });
+  const likeCount = await likeModel.countDocuments({ food: foodId });
 
   res.status(201).json({
-    message: "Food liked successfully",
-    like,
+    message: "successful",
+    likeCount,
   });
 }
 
@@ -85,28 +96,17 @@ async function saveFood(req, res) {
       user: user._id,
       food: foodId,
     });
-
-    await foodModel.findByIdAndUpdate(foodId, {
-      $inc: { savesCount: -1 },
-    });
-
-    return res.status(200).json({
-      message: "Food unsaved successfully",
+  } else {
+    await saveModel.create({
+      user: user._id,
+      food: foodId,
     });
   }
 
-  const save = await saveModel.create({
-    user: user._id,
-    food: foodId,
-  });
-
-  await foodModel.findByIdAndUpdate(foodId, {
-    $inc: { savesCount: 1 },
-  });
-
+  const saveCount = await saveModel.countDocuments({ food: foodId });
   res.status(201).json({
-    message: "Food saved successfully",
-    save,
+    message: "successful",
+    saveCount,
   });
 }
 
@@ -119,9 +119,30 @@ async function getSaveFood(req, res) {
     return res.status(404).json({ message: "No saved foods found" });
   }
 
+  const result = await Promise.all(
+    savedFoods.map(async (entry) => {
+      const foodId = entry.food._id;
+      const [likeCount, saveCount, commentCount] = await Promise.all([
+        likeModel.countDocuments({ food: foodId }),
+        saveModel.countDocuments({ food: foodId }),
+        commentModel.countDocuments({ food: foodId }),
+      ]);
+
+      return {
+        _id: foodId,
+        video: entry.food.video,
+        description: entry.food.description,
+        likeCount,
+        saveCount,
+        commentCount,
+        foodPartner: entry.food.foodPartner,
+      };
+    })
+  );
+
   res.status(200).json({
     message: "Saved foods retrieved successfully",
-    savedFoods,
+    savedFoods: result,
   });
 }
 
@@ -147,15 +168,31 @@ async function postComment(req, res) {
     food: foodId,
     text,
   });
-
-  await foodModel.findByIdAndUpdate(foodId, {
-    $inc: { commentsCount: 1 },
-  });
-
   res.status(201).json({
     message: "Comment posted successfully",
     comment,
   });
+}
+
+async function deleteFood(req, res) {
+  const { foodId } = req.params;
+  const foodPartnerId = req.foodPartner._id;
+
+  const foodItem = await foodModel.findOne({
+    _id: foodId,
+    foodPartner: foodPartnerId,
+  });
+
+  if (!foodItem) {
+    return res.status(404).json({ message: "Food item not found" });
+  }
+
+  try {
+    await foodModel.findByIdAndDelete(foodId);
+    res.status(200).json({ message: "Food item deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 }
 
 module.exports = {
@@ -166,4 +203,5 @@ module.exports = {
   getSaveFood,
   postComment,
   getComments,
+  deleteFood,
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { act, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import CommentBox from "../components/CommentBox";
 import "../styles/comment-box.css";
@@ -17,18 +17,9 @@ const ReelFeed = ({
   useEffect(() => {
     const map = {};
     items.forEach((it) => {
-      if (it && it._id) map[it._id] = it.commentsCount ?? 0;
+      if (it && it._id) map[it._id] = it.commentCount ?? 0;
     });
-    setCommentCounts(map);
   }, [items]);
-
-  const handleAddComment = (itemId) => {
-    setCommentCounts((prev) => {
-      const current =
-        prev[itemId] ?? items.find((i) => i._id === itemId)?.commentsCount ?? 0;
-      return { ...prev, [itemId]: current + 1 };
-    });
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,9 +95,7 @@ const ReelFeed = ({
                       <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
                     </svg>
                   </button>
-                  <div className="reel-action__count">
-                    {item.likeCount ?? item.likesCount ?? item.likes ?? 0}
-                  </div>
+                  <div className="reel-action__count">{item.likeCount}</div>
                 </div>
 
                 <div className="reel-action-group">
@@ -129,9 +118,7 @@ const ReelFeed = ({
                       <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" />
                     </svg>
                   </button>
-                  <div className="reel-action__count">
-                    {item.savesCount ?? 0}
-                  </div>
+                  <div className="reel-action__count">{item.saveCount}</div>
                 </div>
 
                 <div className="reel-action-group">
@@ -158,7 +145,7 @@ const ReelFeed = ({
                     </svg>
                   </button>
                   <div className="reel-action__count">
-                    {commentCounts[item._id] ?? item.commentsCount ?? 0}
+                    {commentCounts[item._id] || item.commentCount || 0}
                   </div>
                 </div>
               </div>
@@ -189,7 +176,16 @@ const ReelFeed = ({
           setCommentOpen(false);
           setActiveItem(null);
         }}
-        onAddComment={(itemId) => handleAddComment(itemId)}
+        onAddComment={(activeItem) => {
+          setCommentCounts((prev) => {
+            const currentCount =
+              prev[activeItem._id] ?? activeItem.commentCount ?? 0;
+            return {
+              ...prev,
+              [activeItem._id]: currentCount + 1,
+            };
+          });
+        }}
       />
     </div>
   );

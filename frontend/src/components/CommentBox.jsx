@@ -23,7 +23,7 @@ const CommentBox = ({
           { withCredentials: true }
         );
         setComments(res.data.comments);
-        console.log(res.data.comments);
+        // console.log(res.data);
       } catch (err) {
         console.error("Failed to fetch comments", err);
       }
@@ -31,7 +31,7 @@ const CommentBox = ({
 
     fetchComments();
     setValue("");
-  }, [visible, item, comments.length]);
+  }, [visible, item]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -56,13 +56,10 @@ const CommentBox = ({
       const newComment = res.data.comment;
       setComments((c) => [newComment, ...c]);
       setValue("");
-      try {
-        onAddComment(item._id);
-      } catch (err) {}
     } catch (err) {
       console.error("Failed to post comment", err);
     }
-    item;
+    onAddComment(item);
   };
 
   if (!visible) return null;

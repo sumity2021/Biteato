@@ -7,7 +7,7 @@ async function authFoodPartnerMiddleware(req, res, next) {
 
   if (!token) {
     return res.status(401).json({
-      message: "Please login first",
+      message: "Not authorized, no token",
     });
   }
 
@@ -37,7 +37,7 @@ async function authUserMiddleware(req, res, next) {
 
   if (!token) {
     return res.status(401).json({
-      message: "Please login first",
+      message: "Not authorized, no token",
     });
   }
 

@@ -48,5 +48,10 @@ router.get(
   authMiddleware.authUserMiddleware,
   foodController.getComments
 );
+router.delete(
+  "/:foodId",
+  authMiddleware.authFoodPartnerMiddleware,
+  foodController.deleteFood
+);
 
 module.exports = router;

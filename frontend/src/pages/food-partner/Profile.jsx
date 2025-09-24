@@ -3,6 +3,7 @@ import "../../styles/profile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import EditFoodPartnerProfileModal from "../../components/EditFoodPartnerProfileModal";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
@@ -11,7 +12,6 @@ const Profile = ({ role }) => {
   const [profile, setProfile] = useState(null);
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -25,7 +25,7 @@ const Profile = ({ role }) => {
         const fp = data.foodPartner || {};
         setProfile(fp);
         setItems(fp.foodItems || []);
-        console.log(data);
+        // console.log(data);
       } catch (e) {
         if (!cancelled) console.warn("Profile fetch failed", e);
       }
@@ -35,13 +35,8 @@ const Profile = ({ role }) => {
     };
   }, [id]);
 
-  useEffect(() => {
-    // reset copy feedback when profile changes
-    setCopySuccess(false);
-  }, [profile]);
-
   const totalLikes = items.reduce((acc, it) => acc + it.likeCount, 0);
-  const totalSaves = items.reduce((acc, it) => acc + it.savesCount, 0);
+  const totalSaves = items.reduce((acc, it) => acc + it.saveCount, 0);
   return (
     <main className="profile-page minimal">
       {/* HERO */}
@@ -259,6 +254,43 @@ const Profile = ({ role }) => {
                       e.currentTarget.currentTime = 0;
                     }}
                   />
+                  {role === "partner" && (
+                    <button
+                      type="button"
+                      className="delete-item-btn"
+                      onClick={async () => {
+                        try {
+                          await axios.delete(
+                            `${BACKEND_URL}/api/food/${v._id}`,
+                            { withCredentials: true }
+                          );
+                          setItems((prev) =>
+                            prev.filter((item) => item._id !== v._id)
+                          );
+                          toast.success("Item deleted");
+                        } catch (error) {
+                          console.error("Error deleting item:", error);
+                        }
+                      }}
+                      aria-label="Delete item"
+                      title="Delete this item"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
               </article>
             );

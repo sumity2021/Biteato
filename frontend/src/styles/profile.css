@@ -326,7 +326,7 @@
 .empty-state {
   text-align: center;
   color: #8ba096;
-  font-size: 0.95rem;
+  font-size: 1.5rem;
 }
 .empty-illustration {
   font-size: 3rem;
@@ -770,4 +770,42 @@
   .edit-trigger-btn {
     margin-left: 0;
   }
+}
+
+.delete-item-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  z-index: 2;
+}
+
+.media-wrap:hover .delete-item-btn,
+.delete-item-btn:focus {
+  opacity: 1;
+}
+
+.delete-item-btn:hover {
+  background: rgba(220, 38, 38, 0.8);
+}
+
+.delete-item-btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.delete-item-btn svg {
+  width: 16px;
+  height: 16px;
 }
