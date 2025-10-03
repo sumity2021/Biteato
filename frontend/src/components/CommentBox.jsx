@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/comment-box.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
@@ -9,9 +10,11 @@ const CommentBox = ({
   item = null,
   onClose = () => {},
   onAddComment = () => {},
+  onDeleteComment = () => {},
 }) => {
   const [comments, setComments] = useState([]);
   const [value, setValue] = useState("");
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     if (!visible) return;
@@ -23,7 +26,7 @@ const CommentBox = ({
           { withCredentials: true }
         );
         setComments(res.data.comments);
-        // console.log(res.data);
+        setUserId(res.data.userId);
       } catch (err) {
         console.error("Failed to fetch comments", err);
       }
@@ -31,7 +34,8 @@ const CommentBox = ({
 
     fetchComments();
     setValue("");
-  }, [visible, item]);
+    console.log("Comment box opened");
+  }, [visible, comments.length, item]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -123,7 +127,44 @@ const CommentBox = ({
                   {new Date(c.createdAt).toLocaleString()}
                 </span>
               </div>
-              <div className="comment-text">{c.text}</div>
+              <div className="comment-text">
+                <p>{c.text}</p>
+                {userId === c.user._id && (
+                  <button
+                    className="comment-delete"
+                    onClick={() => {
+                      axios
+                        .delete(`${BACKEND_URL}/api/food/comment/${c._id}`, {
+                          withCredentials: true,
+                        })
+                        .then(() => {
+                          setComments((comments) =>
+                            comments.filter((comment) => comment._id !== c._id)
+                          );
+                          onDeleteComment(item);
+                        })
+                        .catch((err) => {
+                          toast.error(err?.response?.data?.message || "Error");
+                        });
+                    }}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 6h18" />
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
           ))
         )}

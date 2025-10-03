@@ -68,7 +68,6 @@ async function updateFoodPartner(req, res) {
       phone,
       email,
       address,
-      storeUrl,
       ...(avatarUrl && { avatarUrl }),
     },
     { new: true }

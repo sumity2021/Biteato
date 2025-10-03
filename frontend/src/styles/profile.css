@@ -809,3 +809,37 @@
   width: 16px;
   height: 16px;
 }
+
+.buy-btn {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  background: rgba(213, 209, 209, 0.7);
+  border: none;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  z-index: 2;
+  padding: 0.5rem 0.75rem;
+  transform: translate(50%, -50%);
+}
+
+.media-wrap:hover .buy-btn,
+.buy-btn:focus {
+  opacity: 1;
+}
+
+.buy-btn:hover {
+  background: rgba(218, 212, 212, 0.8);
+  color: #000;
+}
+
+.buy-btn:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}

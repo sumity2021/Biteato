@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import EditFoodPartnerProfileModal from "../../components/EditFoodPartnerProfileModal";
 import { toast } from "react-toastify";
-
+import { Link } from "react-router-dom";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 const Profile = ({ role }) => {
@@ -25,7 +25,6 @@ const Profile = ({ role }) => {
         const fp = data.foodPartner || {};
         setProfile(fp);
         setItems(fp.foodItems || []);
-        // console.log(data);
       } catch (e) {
         if (!cancelled) console.warn("Profile fetch failed", e);
       }
@@ -53,7 +52,6 @@ const Profile = ({ role }) => {
                     alt={`${profile.name || "Avatar"}`}
                     loading="lazy"
                     onError={(e) => {
-                      // hide broken image and let the SVG fallback be shown
                       e.currentTarget.onerror = null;
                       e.currentTarget.style.display = "none";
                     }}
@@ -144,18 +142,6 @@ const Profile = ({ role }) => {
                       <circle cx="12" cy="11" r="2.5" />
                     </svg>
                     {profile.address}
-                  </span>
-                )}
-                {profile.storeUrl && (
-                  <span className="pill store-url-pill" title="Store URL">
-                    <a
-                      className="pill-link truncate"
-                      href={profile.storeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {profile.storeUrl}
-                    </a>
                   </span>
                 )}
               </div>
@@ -254,6 +240,16 @@ const Profile = ({ role }) => {
                       e.currentTarget.currentTime = 0;
                     }}
                   />
+                  {role === "user" && (
+                    <Link
+                      className="buy-btn"
+                      to={"/item/" + v._id}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Buy Now
+                    </Link>
+                  )}
                   {role === "partner" && (
                     <button
                       type="button"

@@ -11,7 +11,6 @@ const EditFoodPartnerProfileModal = ({ id, profile, onClose, onSaved }) => {
     phone: profile.phone || "",
     email: profile.email || "",
     address: profile.address || "",
-    storeUrl: profile.storeUrl || "",
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(profile.avatarUrl || "");
@@ -162,15 +161,6 @@ const EditFoodPartnerProfileModal = ({ id, profile, onClose, onSaved }) => {
               value={form.address}
               onChange={handleChange}
               placeholder="123 Market Street"
-            />
-          </div>
-          <div className="pf-field pf-field-wide">
-            <label>Store URL</label>
-            <input
-              name="storeUrl"
-              value={form.storeUrl}
-              onChange={handleChange}
-              placeholder="https://yourstore.example"
             />
           </div>
 

@@ -14,15 +14,19 @@ const Saved = () => {
         withCredentials: true,
       })
       .then((response) => {
-        const savedFoods = response.data.savedFoods.map((item) => ({
-          _id: item._id,
-          video: item.video,
-          description: item.description,
-          likeCount: item.likeCount,
-          saveCount: item.saveCount,
-          commentCount: item.commentCount,
-          foodPartner: item.foodPartner,
-        }));
+        const savedFoods = response.data.savedFoods
+          .filter(Boolean)
+          .map((item) => ({
+            _id: item._id,
+            video: item.video,
+            description: item.description,
+            likeCount: item.likeCount,
+            saveCount: item.saveCount,
+            commentCount: item.commentCount,
+            foodPartner: item.foodPartner,
+            likeStatus: item.likeStatus,
+            saveStatus: item.saveStatus,
+          }));
         setVideos(savedFoods);
       });
   }, []);

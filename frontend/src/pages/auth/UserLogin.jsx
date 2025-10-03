@@ -66,6 +66,9 @@ const UserLogin = () => {
               autoComplete="current-password"
             />
           </div>
+          <div className="field-group">
+            <Link to="/forgot-password/user">Forget password?</Link>
+          </div>
           <button className="auth-submit" type="submit">
             Sign In
           </button>

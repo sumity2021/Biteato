@@ -16,15 +16,24 @@ router.post(
   foodController.createFood
 );
 
+/* DELETE /api/food/:foodId [protected] */
+router.delete(
+  "/:foodId",
+  authMiddleware.authFoodPartnerMiddleware,
+  foodController.deleteFood
+);
+
 /* GET /api/food/ [protected] */
 router.get("/", authMiddleware.authUserMiddleware, foodController.getFoodItems);
 
+/* POST /api/food/like [protected] */
 router.post(
   "/like",
   authMiddleware.authUserMiddleware,
   foodController.likeFood
 );
 
+/* POST /api/food/save [protected] */
 router.post(
   "/save",
   authMiddleware.authUserMiddleware,
@@ -37,6 +46,12 @@ router.get(
   foodController.getSaveFood
 );
 
+/* comment routes [protected] */
+router.delete(
+  "/comment/:commentId",
+  authMiddleware.authUserMiddleware,
+  foodController.deleteComment
+);
 router.post(
   "/comment/:foodId",
   authMiddleware.authUserMiddleware,
@@ -47,11 +62,6 @@ router.get(
   "/comment/:foodId",
   authMiddleware.authUserMiddleware,
   foodController.getComments
-);
-router.delete(
-  "/:foodId",
-  authMiddleware.authFoodPartnerMiddleware,
-  foodController.deleteFood
 );
 
 module.exports = router;

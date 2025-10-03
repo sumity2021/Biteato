@@ -5,8 +5,8 @@ import "../styles/comment-box.css";
 
 const ReelFeed = ({
   items = [],
-  onLike,
-  onSave,
+  onLike = () => {},
+  onSave = () => {},
   emptyMessage = "No videos yet.",
 }) => {
   const videoRefs = useRef(new Map());
@@ -73,6 +73,32 @@ const ReelFeed = ({
             <div className="reel-overlay">
               <div className="reel-overlay-gradient" aria-hidden="true" />
 
+              {/* Food partner info at top right */}
+              {item.foodPartner && (
+                <div className="reel-partner-info">
+                  <Link
+                    className="reel-partner-link"
+                    to={"/food-partner/" + item.foodPartner}
+                    aria-label="Visit store"
+                  >
+                    <svg
+                      width="30"
+                      height="30"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                  </Link>
+                </div>
+              )}
+
               {/* actions remain grouped together and sit above content */}
               <div className="reel-actions">
                 <div className="reel-action-group">
@@ -86,7 +112,7 @@ const ReelFeed = ({
                       width="22"
                       height="22"
                       viewBox="0 0 24 24"
-                      fill="none"
+                      fill={item.likeStatus === "liked" ? "white" : "none"}
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
@@ -109,7 +135,7 @@ const ReelFeed = ({
                       width="22"
                       height="22"
                       viewBox="0 0 24 24"
-                      fill="none"
+                      fill={item.saveStatus === "saved" ? "white" : "none"}
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
@@ -151,18 +177,19 @@ const ReelFeed = ({
               </div>
 
               <div className="reel-content">
+                {
+                  <Link
+                    className="reel-btn"
+                    to={"/item/" + item._id}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Buy now
+                  </Link>
+                }
                 <p className="reel-description" title={item.description}>
                   {item.description}
                 </p>
-                {item.foodPartner && (
-                  <Link
-                    className="reel-btn"
-                    to={"/food-partner/" + item.foodPartner}
-                    aria-label="Visit store"
-                  >
-                    Visit store
-                  </Link>
-                )}
               </div>
             </div>
           </section>
@@ -183,6 +210,16 @@ const ReelFeed = ({
             return {
               ...prev,
               [activeItem._id]: currentCount + 1,
+            };
+          });
+        }}
+        onDeleteComment={(activeItem) => {
+          setCommentCounts((prev) => {
+            const currentCount =
+              prev[activeItem._id] ?? activeItem.commentCount ?? 0;
+            return {
+              ...prev,
+              [activeItem._id]: Math.max(currentCount - 1, 0),
             };
           });
         }}

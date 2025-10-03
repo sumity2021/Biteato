@@ -14,7 +14,9 @@ import CreateFood from "../pages/food-partner/CreateFood";
 import Profile from "../pages/food-partner/Profile";
 import Logout from "../pages/auth/Logout";
 import PrivateRoute from "./PrivateRoute";
-
+import ForgetPassword from "../components/ForgetPassword";
+import ChangePassword from "../components/ChangePassword";
+import ProductPage from "../components/ProductPage";
 export function AppRoutes() {
   return (
     <Router>
@@ -28,7 +30,17 @@ export function AppRoutes() {
           element={<FoodPartnerRegister />}
         />
         <Route path="/food-partner/login" element={<FoodPartnerLogin />} />
+        <Route
+          path="/forgot-password/user"
+          element={<ForgetPassword userType="user" />}
+        />
+        <Route
+          path="/forgot-password/food-partner"
+          element={<ForgetPassword userType="food-partner" />}
+        />
+        <Route path="/reset-password" element={<ChangePassword />} />
 
+        <Route path="/item/:id" element={<ProductPage />} />
         {/* Protected routes for users */}
         <Route
           path="/home"
@@ -52,7 +64,7 @@ export function AppRoutes() {
           path="/food-partner/:id"
           element={
             <PrivateRoute role="user">
-              <Profile />
+              <Profile role="user" />
               <BottomNavUser />
             </PrivateRoute>
           }

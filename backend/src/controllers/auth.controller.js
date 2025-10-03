@@ -2,6 +2,7 @@ const userModel = require("../models/user.model");
 const foodPartnerModel = require("../models/foodpartner.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { sendResetEmail } = require("../services/mail.service");
 
 async function registerUser(req, res) {
   const { fullName, email, password } = req.body;
@@ -78,8 +79,8 @@ async function loginUser(req, res) {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true, // required for cross-site
-    sameSite: "None", // required for cross-site
+    secure: true,
+    sameSite: "None",
     path: "/",
   });
 
@@ -126,8 +127,8 @@ async function registerFoodPartner(req, res) {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true, // required for cross-site
-    sameSite: "None", // required for cross-site
+    secure: true,
+    sameSite: "None",
     path: "/",
   });
 
@@ -174,8 +175,8 @@ async function loginFoodPartner(req, res) {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true, // required for cross-site
-    sameSite: "None", // required for cross-site
+    secure: true,
+    sameSite: "None",
     path: "/",
   });
 
@@ -202,6 +203,57 @@ function logout(req, res) {
   });
 }
 
+async function forgetPassword(req, res) {
+  const { email } = req.body;
+  const { userType } = req.params;
+  try {
+    let user;
+    if (userType == "user") {
+      user = await userModel.findOne({ email: email });
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
+    } else if (userType == "foodpartner") {
+      user = await foodPartnerModel.findOne({ email: email });
+      if (!user) {
+        return res.status(400).json({ message: "Food partner not found" });
+      }
+    }
+    const resetToken = jwt.sign(
+      { userId: user._id, type: userType },
+      process.env.JWT_RESET_PASSWORD_SECRET,
+      { expiresIn: "10m" }
+    );
+    await sendResetEmail(email, resetToken);
+    return res.status(200).json({ message: "Reset email sent" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+async function changePassword(req, res) {
+  const { token, newPassword } = req.body;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET);
+    if (!decoded) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+    const { userId, type } = decoded;
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    if (type == "user") {
+      await userModel.findByIdAndUpdate(userId, { password: hashedPassword });
+    } else if (type == "foodpartner") {
+      await foodPartnerModel.findByIdAndUpdate(userId, {
+        password: hashedPassword,
+      });
+    }
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("There was an error!", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 module.exports = {
   registerUser,
   loginUser,
@@ -209,4 +261,6 @@ module.exports = {
   registerFoodPartner,
   loginFoodPartner,
   validateUser,
+  forgetPassword,
+  changePassword,
 };

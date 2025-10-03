@@ -125,8 +125,23 @@
 .comment-text {
   color: #e6eef0;
   font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
+.comment-text button {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.comment-text button:hover {
+  color: #ff4d4d;
+}
 /* animation */
 @keyframes commentSlideUp {
   from {
@@ -137,4 +152,11 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+p {
+  word-break: break-word;
+  white-space: normal;
+  text-align: left;
+  width: 80%;
 }

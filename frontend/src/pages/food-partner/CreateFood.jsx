@@ -13,6 +13,7 @@ const CreateFood = () => {
   const [fileError, setFileError] = useState("");
   const fileInputRef = useRef(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [foodURL, setFoodURL] = useState("");
 
   useEffect(() => {
     if (!videoFile) {
@@ -86,6 +87,7 @@ const CreateFood = () => {
     setName("");
     setDescription("");
     setVideoFile(null);
+    setFoodURL("");
   };
 
   const isDisabled = useMemo(

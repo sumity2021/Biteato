@@ -11,7 +11,7 @@ const Home = () => {
     axios
       .get(`${BACKEND_URL}/api/food`, { withCredentials: true })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setVideos(response.data.foodItems);
       })
       .catch((error) => {
@@ -26,11 +26,13 @@ const Home = () => {
         { foodId: item._id },
         { withCredentials: true }
       );
+      // console.log(response);
       const updatedVideos = videos.map((v) =>
         v._id === item._id
           ? {
               ...v,
               likeCount: response.data.likeCount,
+              likeStatus: response.data.message,
             }
           : v
       );
@@ -47,12 +49,13 @@ const Home = () => {
         { foodId: item._id },
         { withCredentials: true }
       );
-
+      // console.log(response);
       const updatedVideos = videos.map((v) =>
         v._id === item._id
           ? {
               ...v,
               saveCount: response.data.saveCount,
+              saveStatus: response.data.message,
             }
           : v
       );

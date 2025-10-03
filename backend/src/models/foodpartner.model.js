@@ -26,10 +26,6 @@ const foodPartnerSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  storeUrl: {
-    type: String,
-    default: "",
-  },
   password: {
     type: String,
     required: true,

@@ -68,6 +68,9 @@ const FoodPartnerLogin = () => {
               autoComplete="current-password"
             />
           </div>
+          <div className="field-group">
+            <Link to="/forgot-password/food-partner">Forget password?</Link>
+          </div>
           <button className="auth-submit" type="submit">
             Sign In
           </button>

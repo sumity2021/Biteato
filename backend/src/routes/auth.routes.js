@@ -22,6 +22,9 @@ router.get(
   authController.validateUser
 );
 
+// password reset APIs
+router.post("/forget-password/:userType", authController.forgetPassword);
+router.post("/change-password", authController.changePassword);
 router.delete("/logout", authController.logout);
 
 module.exports = router;
