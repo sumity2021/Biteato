@@ -227,8 +227,7 @@ async function forgetPassword(req, res) {
     await sendResetEmail(email, resetToken);
     return res.status(200).json({ message: "Reset email sent" });
   } catch (error) {
-    console.error("There was an error!", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error });
   }
 }
 

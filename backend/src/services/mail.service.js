@@ -15,8 +15,11 @@ async function sendResetEmail(to, resetToken) {
     subject: "Password Reset",
     html: `<p>You requested a password reset</p><p>Click <a href="${process.env.FRONTEND_URL}/reset-password?token=${resetToken}">here</a> to reset your password</p> <p>This link will expire in 10 minutes.</p>`,
   };
-
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Failed to send email", error);
+  }
 }
 
 module.exports = { sendResetEmail };
