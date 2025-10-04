@@ -1,24 +1,21 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendResetEmail(to, resetToken) {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: to,
-    subject: "Password Reset",
-    html: `<p>You requested a password reset</p><p>Click <a href="${process.env.FRONTEND_URL}/reset-password?token=${resetToken}">here</a> to reset your password</p> <p>This link will expire in 10 minutes.</p>`,
-  };
-
-  await transporter.sendMail(mailOptions);
+  try {
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to,
+      subject: "Password Reset",
+      html: `<p>You requested a password reset</p>
+             <p>Click <a href="${process.env.FRONTEND_URL}/reset-password?token=${resetToken}">here</a> 
+             to reset your password</p>
+             <p>This link will expire in 10 minutes.</p>`,
+    });
+    console.log("✅ Email sent to", to);
+  } catch (err) {
+    console.error("❌ Failed to send email:", err);
+  }
 }
 
 module.exports = { sendResetEmail };
