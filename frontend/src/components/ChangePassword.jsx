@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "../styles/auth-shared.css";
@@ -33,6 +33,7 @@ const ChangePassword = () => {
         }
       );
       toast.success(response.data.message);
+      Navigate("/");
     } catch (error) {
       toast.error("Failed to change password");
       console.error("There was an error!", error);

@@ -1,14 +1,14 @@
 const nodemailer = require("nodemailer");
 const sgMail = require("@sendgrid/mail");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY); // set in Sevalla env vars
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function sendResetEmail(to, resetToken) {
   const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
   const msg = {
     to: to,
-    from: process.env.EMAIL_FROM, // verified sender in SendGrid
+    from: process.env.EMAIL_FROM,
     subject: "Password Reset",
     html: `<p>You requested a password reset</p>
            <p>Click <a href="${resetLink}">here</a> to reset your password</p>
@@ -20,7 +20,7 @@ async function sendResetEmail(to, resetToken) {
     console.log("Reset email sent to", to);
   } catch (err) {
     console.error("SendGrid error:", err);
-    throw err; // let your route handle the 500 if needed
+    throw err;
   }
 }
 
