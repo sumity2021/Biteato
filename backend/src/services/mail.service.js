@@ -1,24 +1,26 @@
 const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY); // set in Sevalla env vars
 
 async function sendResetEmail(to, resetToken) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
+  const msg = {
     to: to,
+    from: process.env.EMAIL_FROM, // verified sender in SendGrid
     subject: "Password Reset",
-    html: `<p>You requested a password reset</p><p>Click <a href="${process.env.FRONTEND_URL}/reset-password?token=${resetToken}">here</a> to reset your password</p> <p>This link will expire in 10 minutes.</p>`,
+    html: `<p>You requested a password reset</p>
+           <p>Click <a href="${resetLink}">here</a> to reset your password</p>
+           <p>This link will expire in 10 minutes.</p>`,
   };
+
   try {
-    await transporter.sendMail(mailOptions);
-  } catch (error) {
-    console.error("Failed to send email", error);
+    await sgMail.send(msg);
+    console.log("Reset email sent to", to);
+  } catch (err) {
+    console.error("SendGrid error:", err);
+    throw err; // let your route handle the 500 if needed
   }
 }
 
