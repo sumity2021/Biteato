@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "../styles/auth-shared.css";
@@ -10,12 +10,14 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Read token from query parameter
   const location = useLocation();
+  const navigate = useNavigate();
+
   const token = new URLSearchParams(location.search).get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (newPassword !== confirmPassword) {
       return toast.error("Passwords do not match");
     }
@@ -32,12 +34,15 @@ const ChangePassword = () => {
           newPassword,
         }
       );
-      console.log(response);
+
       toast.success(response.data.message);
+
+      navigate("/", { replace: true });
     } catch (error) {
       toast.error("Failed to change password");
       console.error("There was an error!", error);
     }
+
     setNewPassword("");
     setConfirmPassword("");
   };
