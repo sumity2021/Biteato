@@ -32,8 +32,8 @@ const ChangePassword = () => {
           newPassword,
         }
       );
+      console.log(response);
       toast.success(response.data.message);
-      Navigate("/");
     } catch (error) {
       toast.error("Failed to change password");
       console.error("There was an error!", error);
